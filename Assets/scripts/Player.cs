@@ -15,7 +15,12 @@ public class Player : LivingThing {
 
 
     void Update () {
-	    foreach (KeyValuePair<Type,Ability> pair in Abilities){
+        Vector3 keyBoardInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+        Vector3 speed = transform.TransformDirection(keyBoardInput * Time.deltaTime * Speed.Get());
+        gameObject.transform.position += speed;
+        
+
+        foreach (KeyValuePair<Type,Ability> pair in Abilities){
 	        if (Input.GetKeyDown(pair.Value.ShortCutKey)){
 	            AbilityStack.Insert(0, pair.Value);
 	            if (AbilityStack.Count > 1) AbilityStack.RemoveAt(1);
@@ -31,5 +36,9 @@ public class Player : LivingThing {
 	    }
     }
 
-    
+    public void TargetSomething(LivingThing newTarget) {
+        if (Target != null) Target.gameObject.GetComponent<Renderer>().material.color = Color.red;
+        Target = newTarget;
+        Target.gameObject.GetComponent<Renderer>().material.color = Color.blue;
+    }
 }

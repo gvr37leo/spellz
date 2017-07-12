@@ -3,12 +3,14 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets;
 using Assets.scripts;
 
 public enum State { idle, casting, channeling }
 
 public abstract class LivingThing : MonoBehaviour {
     public Vector3 Facing = Vector3.forward;
+    public BuffStatRequestSystem BuffStatRequestSystem;
     public event Action DeathEvent;
     public event Action<float, LivingThing> TakeDamageEvent;
     public event Action<Ability> OnCastStart;
@@ -68,9 +70,9 @@ public abstract class LivingThing : MonoBehaviour {
     }
 
     public void TakeDamage(float damage, LivingThing attacker) {
-        Health.Val -= damage;
+        Health -= damage;
         if (TakeDamageEvent != null) TakeDamageEvent(damage, attacker);
-        if (Health.Val.Get() < 0) {
+        if (Health.GetVal() <= 0) {
             Die();
         }
     }
@@ -80,16 +82,31 @@ public abstract class LivingThing : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    public void ApplyBuff(Buff buff) {
-        buff.OnApply();
-        Buffs.Add(buff.GetType(), buff);
-        Globals.Self.StartCoroutine(buff.Progress());
-        if (OnBuffAdded != null) OnBuffAdded(buff);
+    public void ApplyBuff(Buff buff, bool increaseStacks = false) {
+        if (Buffs.ContainsKey(buff.GetType())) {
+            Buffs[buff.GetType()].Reset();
+            if (increaseStacks) {
+                Buffs[buff.GetType()].Stacks += 1;
+            }
+        }else {
+            Buffs.Add(buff.GetType(), buff);
+            Globals.Self.StartCoroutine(buff.Progress());
+            if (OnBuffAdded != null) OnBuffAdded(buff);
+        }
     }
 
     public void RemoveBuff(Buff buff) {
-        Buffs.Remove(buff.GetType());
-        buff.OnRemove();
-        if (OnBuffRemoved != null) OnBuffRemoved(buff);
+        if (Buffs.ContainsKey(buff.GetType())) {
+            Buffs.Remove(buff.GetType());
+            if (OnBuffRemoved != null) OnBuffRemoved(buff);
+        }
+    }
+
+    public void DecreaseBuffStacks(Buff buff) {
+        if (Buffs.ContainsKey(buff.GetType()) && Buffs[buff.GetType()].Stacks.GetVal() > 1) {
+            Buffs[buff.GetType()].Stacks -= 1;
+        }else {
+            RemoveBuff(buff);
+        }
     }
 }

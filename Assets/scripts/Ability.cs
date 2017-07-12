@@ -14,11 +14,14 @@ public abstract class Ability : ScriptableObject {
 
     public KeyCode ShortCutKey;
     public LivingThing Caster;
+
     public Stat CastTime = 1;
     public Stat Range = 10;
-    public float Cooldown = 2;
+    public CappedStat Ammo = new CappedStat(1, 1);
+    public Stat Cooldown = 2;
+
     public float TimeSpentCoolingDown = 0;
-    public CappedStat Ammo = new CappedStat(1,1);
+    
     
     public List<RuleCheck> Rules = new List<RuleCheck>();
 
@@ -40,14 +43,14 @@ public abstract class Ability : ScriptableObject {
 
     public abstract void Launch();
 
-    public abstract void Hit();
+    public abstract void Hit(List<LivingThing> enemys);
 
     public IEnumerator CoolingDown(){
         TimeSpentCoolingDown = 0;
         if (OnCoolDownStart != null) OnCoolDownStart();
         yield return null;
 
-        while (TimeSpentCoolingDown < Cooldown){
+        while (TimeSpentCoolingDown < Cooldown.Get()){
             TimeSpentCoolingDown += Time.deltaTime;
             if (OnCoolDownTick != null) OnCoolDownTick();
             yield return null;
@@ -57,7 +60,7 @@ public abstract class Ability : ScriptableObject {
     }
 
     public bool IsReady() {
-        return TimeSpentCoolingDown >= Cooldown;
+        return TimeSpentCoolingDown >= Cooldown.Get();
     }
 
     public bool CompliesToRules(){

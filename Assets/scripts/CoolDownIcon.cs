@@ -15,15 +15,16 @@ public class CoolDownIcon : MonoBehaviour {
     void Start () {
         Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         Player.OnInitFinished += () => {
-            Ability ability = Player.Abilities[Ability.GetType()];
+            Ability = Player.Abilities[Ability.GetType()];
+            ShortcutText.text = Ability.ShortCutKey.ToString();
 
-            ability.OnCoolDownStart += () => {
+            Ability.OnCoolDownStart += () => {
                 Mask.fillAmount = 1;
             };
-            ability.OnCoolDownTick += () => {
-                Mask.fillAmount = 1 - (ability.TimeSpentCoolingDown / ability.Cooldown);
+            Ability.OnCoolDownTick += () => {
+                Mask.fillAmount = 1 - (Ability.TimeSpentCoolingDown / Ability.Cooldown.Get());
             };
-            ability.OnCoolDownFinished += () => {
+            Ability.OnCoolDownFinished += () => {
                 Mask.fillAmount = 0;
             };
         };
@@ -31,7 +32,6 @@ public class CoolDownIcon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	    
-	    
+	    AmmoText.text = Ability.Ammo.GetVal().ToString();
 	}
 }

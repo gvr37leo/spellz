@@ -20,7 +20,7 @@ namespace Assets.scripts.buffs {
         }
 
         public override void OnApply() {
-            _castTimeModifier = castTime => -0.2f;
+            _castTimeModifier = castTime => -0.1f * Stacks.GetVal();
             Wearer.Abilities[typeof(Melee)].CastTime.FlatStatModifiers.Add(_castTimeModifier);
         }
 

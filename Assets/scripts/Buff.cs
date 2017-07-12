@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.scripts
 {
@@ -12,7 +13,7 @@ namespace Assets.scripts
         public event Action OnBuffTick;
         public event Action OnBuffFinished;
 
-        public int Stacks = 1;
+        public CappedStat Stacks = new CappedStat(1,5);
         public float TimeLeft = 3;
         public float Duration = 3;
         [HideInInspector]
@@ -21,12 +22,14 @@ namespace Assets.scripts
         public Sprite Image;
         public abstract void OnApply();
         public abstract void OnRemove();
-
+        
         public Buff BaseInitialize(LivingThing wearer) {
             Buff buff = Instantiate(this);
             buff.Wearer = wearer;
             buff.TimeLeft = Duration;
-            OnBuffTick += Tick;
+            buff.OnBuffStart += buff.OnApply;
+            buff.OnBuffTick += buff.Tick;
+            buff.OnBuffFinished += buff.OnRemove;
             return buff.Initialize(wearer);
         }
 
@@ -40,7 +43,11 @@ namespace Assets.scripts
                 yield return null;
             }
             Wearer.RemoveBuff(this);
-            if (OnBuffFinished != null) OnBuffFinished();
+            if (OnBuffFinished != null)  OnBuffFinished();
+        }
+
+        public void Reset() {
+            TimeLeft = Duration;
         }
 
         public abstract void Tick();

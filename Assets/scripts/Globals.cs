@@ -18,10 +18,11 @@ public class Globals : MonoBehaviour {
         CantCastWhileCasting = (spell, caster, target) => caster.State != State.casting;
 
         DefaultSpellRuleCheck = new List<RuleCheck>{
+            MustHaveTarget,
             //(spell, caster, target) => spell.manaCost <= caster.mana,
             (spell, caster, target) => (target.transform.position - caster.transform.position).magnitude < spell.Range.Get(),
             //(spell, caster, target) => caster.velocity == Vector3.zero,
-            (spell, caster, target) => spell.Ammo.Val.Get() > 0,
+            (spell, caster, target) => spell.Ammo.GetVal() > 0,
             (spell, caster, target) => spell.IsReady(),
             //MustRespectGlobalCooldown,
             CantCastWhileCasting
