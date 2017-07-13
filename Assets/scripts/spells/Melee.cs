@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Assets.scripts;
 using Assets.scripts.buffs;
 
-[CreateAssetMenu(fileName = "Melee", menuName = "Spells/Melee", order = 1)]
+//[CreateAssetMenu(fileName = "Melee", menuName = "Spells/Melee", order = 1)]
 // ReSharper disable once CheckNamespace
 public class Melee : Ability {
     public Fervor Fervor;

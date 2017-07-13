@@ -1,15 +1,10 @@
 fileFormatVersion: 2
 guid: ce5bc990e6ba94a4d97b39fffb8ce0b5
-timeCreated: 1499870427
+timeCreated: 1499940769
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - Caster: {instanceID: 0}
-  - Fervor: {instanceID: 0}
-  - SwordHitAudioClip: {fileID: 8300000, guid: 540e0ae0feb4d2a4d979b5f5153737b0, type: 3}
-  - SwordMissAudioClip: {fileID: 8300000, guid: 2f5ec020b217fee45bc1464ebe5199f8,
-      type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

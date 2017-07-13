@@ -47,7 +47,7 @@ namespace Assets.scripts
         }
 
         public static implicit operator Stat(float v) {
-            CappedStat c = new CappedStat(1,1);
+            //CappedStat c = new CappedStat(1,1); causes stackoverflow
             return new Stat(v);
         }
     }

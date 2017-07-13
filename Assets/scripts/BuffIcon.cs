@@ -25,7 +25,7 @@ namespace Assets.scripts {
 	
         // Update is called once per frame
         void Update () {
-            StacksText.text = Buff.Stacks.ToString();
+            StacksText.text = Buff.Stacks.GetVal().ToString();
         }
     }
 }
